@@ -1,5 +1,5 @@
 import java.util.Random;
-
+// Programa original con todas los sort, el main los llama por medio de argumentos a la hora de la ejecuci
 public class SortingAlgorithms {
     public static void main(String[] args) {
         if (args.length != 1) {
