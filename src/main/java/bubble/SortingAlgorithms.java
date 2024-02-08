@@ -19,32 +19,16 @@ public class SortingAlgorithms {
                 array[i] = random.nextInt(10);
             }
 
-            long startTime = System.nanoTime();
-            switch (algorithm) {
-                case "gnome":
-                    gnomeSort(array);
-                    break;
-                case "merge":
-                    mergeSort(array);
-                    break;
-                case "quick":
-                    quickSort(array);
-                    break;
-                case "radix":
-                    radixSort(array);
-                    break;
-                case "bubble":
-                    bubbleSort(array);
-                    break;
-                default:
-                    System.out.println("Algoritmo de ordenamiento no reconocido");
-                    return;
-            }
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime) / 1000000; // Duración en milisegundos
+       //     long startTime = System.nanoTime();
+
+        //        bubbleSort(array);
+ 
+         //   long endTime = System.nanoTime();
+          //  long duration = (endTime - startTime) / 1000000; // Duración en milisegundos
 
             // Imprimir información sobre el tiempo de ejecución
-            System.out.println(size + "," + duration);
+           // System.out.println(size + "," + duration);
+           // @ Se descarta por usar JProfiler
         }
     }
 

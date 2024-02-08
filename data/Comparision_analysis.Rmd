@@ -1,0 +1,172 @@
+---
+title: "Hoja de Trabajo 3 - Comparación de Algoritmos de ordenamiento"
+author: "Juan Pablo Muralles Ramírez"
+
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introducción
+
+A continuación se muestra un análisis de eficiencia de diferentes algoritmos de ordenamiento.
+El objetivo principal de este análisis es evaluar y comparar el rendimiento de cada algoritmo en términos de su tiempo de ejecución. Para ello, hemos recopilado datos de ejecución de cada algoritmo. A través de este análisis comparativo, esperamos proporcionar una visión clara y detallada del rendimiento relativo de estos algoritmos de ordenamiento.
+
+# Contexto
+
+Para recopilar la información necesaria para este análisis, se diseñó y desarrolló una aplicación en Java con el propósito de automatizar el proceso de ejecución de cada algoritmo de ordenamiento.  La metodología consistió en la generación de una lista inicial con diez elementos aleatorios. Posteriormente, esta lista fue sometida a un proceso de ordenamiento utilizando el algoritmo seleccionado. Seguidamente, se procedió a incrementar gradualmente el tamaño de la lista, añadiendo un elemento en cada iteración, y se repitió el proceso de ordenamiento. Este procedimiento iterativo se llevó a cabo hasta alcanzar una lista de tres mil elementos, lo que permitió obtener datos exhaustivos sobre el rendimiento de cada algoritmo en un rango diverso de tamaños de listas.
+
+Para el análisis de rendimiento se utilizó la herramienta `Jprofiler`. Esta analiza cada clase y genera un archivo csv con los resultados de cada iteración.
+
+Posteriormente, los archivos csv se sometieron a análisis en R, para generar gráficas y estadísticas de la eficiencia de cada csv correspondiente a cada algoritmo.
+
+Los algoritmos analizados son:
+
+- `Gnome Sort`
+- `Merge Sort`
+- `Quick Sort`
+- `Radix Sort`
+- `Bubble Sort`
+
+# Gráficas
+
+```{r warning=FALSE}
+library(ggplot2)
+library(dplyr)
+
+```
+
+
+## Gnome Sort
+
+```{r warning=FALSE}
+gnome_data <- read.csv("gnome.csv")
+
+scatter_with_line_gnome <- ggplot(gnome_data, aes(x = size, y = duration)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +  
+  labs(title = "Gnome Sort", x = "List Size", y = "Duration") +
+  theme_minimal()
+
+scatter_with_line_gnome
+
+
+```
+
+## Merge Sort
+
+```{r warning=FALSE}
+merge_data <- read.csv("merge.csv")
+
+scatter_with_line_merge <- ggplot(merge_data, aes(x = size, y = duration)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(title = "Merge Sort", x = "Size", y = "Duration") +
+  theme_minimal()
+
+scatter_with_line_merge
+
+
+```
+
+
+## Quick Sort
+
+```{r warning=FALSE}
+quick_data <- read.csv("quick.csv")
+
+scatter_with_line_quick <- ggplot(quick_data, aes(x = size, y = duration)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +  
+  labs(title = "Quick Sort", x = "Size", y = "Duration") +
+  theme_minimal()
+
+scatter_with_line_quick
+
+```
+
+## Radix Sort
+```{r warning=FALSE}
+radix_data <- read.csv("radix.csv")
+
+scatter_with_line_radix <- ggplot(radix_data, aes(x = size, y = duration)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(title = "Radix Sort", x = "Size", y = "Duration") +
+  theme_minimal()
+
+scatter_with_line_radix
+
+
+```
+
+
+## Bubble Sort
+```{r warning=FALSE}
+bubble_data <- read.csv("bubble.csv")
+
+scatter_with_line_bubble <- ggplot(bubble_data, aes(x = size, y = duration)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(title = "Bubble Sort", x = "Size", y = "Duration") +
+  theme_minimal()
+
+scatter_with_line_bubble
+
+```
+
+# Comparación 
+
+```{r warning=FALSE}
+combined_data <- bind_rows(
+  gnome = mutate(gnome_data, size = as.integer(size), Algorithm = "Gnome Sort"),
+  merge = mutate(merge_data, size = as.integer(size), Algorithm = "Merge Sort"),
+  bubble = mutate(bubble_data, size = as.integer(size), Algorithm = "Bubble Sort"),
+  quick = mutate(quick_data, size = as.integer(size), Algorithm = "Quick Sort"),
+  radix = mutate(radix_data, size = as.integer(size), Algorithm = "Radix Sort")
+)
+
+scatter_with_line <- ggplot(combined_data, aes(x = size, y = duration, color = Algorithm)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +  
+  labs(title = "Sorting Algorithm Comparison", x = "Size", y = "Time") +
+  theme_minimal()
+
+scatter_with_line
+
+```
+
+# Análisis Estadístico
+
+A continuación se muestra el resumen de los data-frames, mostrando la media de tiempo en orden acendente, es decir, de mas a menos en cuestión de eficiencia:
+
+```{r warning=FALSE}
+mean_time_gnome <- mean(gnome_data$duration)
+mean_time_merge <- mean(merge_data$duration)
+mean_time_bubble <- mean(bubble_data$duration)
+mean_time_quick <- mean(quick_data$duration)
+mean_time_radix <- mean(radix_data$duration)
+
+mean_times <- data.frame(
+  Algorithm = c("Gnome Sort", "Merge Sort", "Bubble Sort", "Quick Sort", "Radix Sort"),
+  Mean_Time = c(mean_time_gnome, mean_time_merge, mean_time_bubble, mean_time_quick, mean_time_radix)
+)
+
+mean_times <- mean_times[order(mean_times$Mean_Time), ]
+
+print(mean_times)
+```
+Se puede observar que el algoritmo mas efectivo es Quick Sort.
+
+# Enlaces:
+
+- Repositorio con clases y data-frames:
+  https://github.com/juampam/sort_cases_Tester
+  
+- Java Profiler
+  https://www.ej-technologies.com/products/jprofiler/overview.html
+  
+  
